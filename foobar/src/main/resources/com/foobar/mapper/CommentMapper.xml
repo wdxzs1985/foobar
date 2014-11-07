@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.CommentMapper">
+    
+    <cache flushInterval="3600000" size="512" readOnly="true"/>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO m_comment(
+        <trim suffixOverrides=",">
+            ARTICLE_ID,
+            USER_ID,
+            content,
+            parent_id,
+            root_id,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{articleBean.id},
+            #{userBean.id},
+            #{content},
+            #{parent.id},
+            #{root.id},
+        </trim>
+        )
+    </insert>
+    
+    <select id="fetchBean" resultType="CommentBean">
+        SELECT 
+        <trim suffixOverrides=",">
+            m_comment.id                      as id,
+            m_comment.content                 as content,
+            m_comment.`root_id`               as `root.id`,
+            m_comment.`parent_id`             as `parent.id`,
+        </trim>
+        FROM 
+            m_comment
+                left join
+            m_comment root ON root.id = m_comment.root_id
+                left join
+            m_comment parent ON parent.id = m_comment.parent_id
+        <where>
+            m_comment.`id` = #{id}
+        </where>
+    </select>
+    
+    <select id="countComicComment" resultType="int">
+        SELECT 
+            count(v_comic_comment.id)
+        FROM 
+            v_comic_comment
+        <where>
+            v_comic_comment.`articleBean.id` = #{articleId}
+        </where>
+    </select>
+    
+    <select id="fetchComicComment" resultType="CommentBean">
+        SELECT 
+        <trim suffixOverrides=",">
+            v_comic_comment.id                      as id,
+            v_comic_comment.content                 as content,
+            v_comic_comment.createDate              as createDate,
+            v_comic_comment.`userBean.id`           as `userBean.id`,
+            v_comic_comment.`userBean.nickname`     as "userBean.nickname",
+            v_comic_comment.`articleBean.id`        as `articleBean.id`,
+            v_comic_comment.`articleBean.title`     as `articleBean.title`,
+        </trim>
+        FROM 
+            v_comic_comment
+        <where>
+            v_comic_comment.`articleBean.id` = #{articleId}
+        </where>
+        order by v_comic_comment.id desc
+        limit #{start}, #{pageSize}
+    </select>
+    
+    
+    <select id="countMusicComment" resultType="int">
+        SELECT 
+            count(v_music_comment.id)
+        FROM 
+            v_music_comment
+        <where>
+            v_music_comment.`articleBean.id` = #{articleId}
+        </where>
+    </select>
+    
+    <select id="fetchMusicComment" resultType="CommentBean">
+        SELECT 
+        <trim suffixOverrides=",">
+            v_music_comment.id                      as id,
+            v_music_comment.content                 as content,
+            v_music_comment.createDate              as createDate,
+            v_music_comment.`userBean.id`           as `userBean.id`,
+            v_music_comment.`userBean.nickname`     as "userBean.nickname",
+            v_music_comment.`articleBean.id`        as `articleBean.id`,
+            v_music_comment.`articleBean.title`     as `articleBean.title`,
+        </trim>
+        FROM 
+            v_music_comment
+        <where>
+            v_music_comment.`articleBean.id` = #{articleId}
+        </where>
+        order by v_music_comment.id desc
+        limit #{start}, #{pageSize}
+    </select>
+</mapper>

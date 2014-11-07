@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.PhotoMapper">
+
+    <insert id="insert">
+        insert into r_photo (
+        <trim suffixOverrides=",">
+            id,
+            name,
+            make,
+            model,
+            lens_model,
+            focal_length,
+            shutter_speed,
+            aperture,
+            iso_equivalent,
+            taken
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            #{id},
+            #{name},
+            #{make},
+            #{model},
+            #{lensModel},
+            #{focalLength},
+            #{shutterSpeed},
+            #{aperture},
+            #{isoEquivalent},
+            #{taken},
+        </trim>
+        )
+    </insert>
+    
+    <select id="fetchList" resultType="PhotoBean">
+        select
+        <trim suffixOverrides=",">
+            `v_album_photo`.`photoBean.id`              as id,
+            `v_album_photo`.`photoBean.name`            as name,
+            `v_album_photo`.`photoBean.make`            as make,
+            `v_album_photo`.`photoBean.model`           as model,
+            `v_album_photo`.`photoBean.lensModel`       as lensModel,
+            `v_album_photo`.`photoBean.focalLength`     as focalLength,
+            `v_album_photo`.`photoBean.shutterSpeed`    as shutterSpeed,
+            `v_album_photo`.`photoBean.aperture`        as aperture,
+            `v_album_photo`.`photoBean.isoEquivalent`   as isoEquivalent,
+            `v_album_photo`.`photoBean.taken`           as taken,
+        </trim>
+        from
+            v_album_photo 
+        <where>
+            `albumBean.id` = #{articleBean.id}
+        </where>
+        order by orderNo 
+    </select>
+</mapper>

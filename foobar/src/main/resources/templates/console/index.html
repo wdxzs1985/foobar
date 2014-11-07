@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+  layout:decorator="console/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-wrap container-header">
+        <div class="container">
+            <div class="media">
+                <a th:href="@{/console/setting}" class="pull-left">
+                    <img class="img-60 img-circle media-object visible-xs" 
+                        th:src="@{/files/u__${session.LOGIN_USER.id}__/cover_120.jpg}" 
+                        th:alt-title="${session.LOGIN_USER}"/>
+                    <img class="img-120 img-circle media-object hidden-xs" 
+                        th:src="@{/files/u__${session.LOGIN_USER.id}__/cover_120.jpg}" 
+                        th:alt-title="${session.LOGIN_USER}"/>
+                </a>
+                <div class="media-body">
+                    <h1 th:text="${session.LOGIN_USER}" class="media-heading"></h1>
+                    <p class="text-muted"
+                        th:unless="${#strings.isEmpty(session.LOGIN_USER.signature)}" 
+                        th:text="${session.LOGIN_USER.signature}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-wrap container-tab">
+        <div class="container">
+            <ul class="nav">
+                <li class="active">
+                    <a th:href="@{/console}">
+                        <span class="glyphicon glyphicon-home"></span>
+                        <span class="hidden-xs" th:text="#{console.user.timeline}"></span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/console/album}">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <span class="hidden-xs" th:text="#{console.article}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-wrap container-wrap-darker">
+        <div class="container" >
+            <div id="timeline" class="timeline-container"
+                th:attr="data-href=@{/console/timeline}">
+                <div class="timeline-list-content hidden">
+                    <ul class="cbp_tmtimeline media-list" ></ul>
+                    <ul class="pager">
+                        <li class="previous">
+                            <a href="javascript:;">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                <span th:text="#{button.previousPage}"></span>
+                            </a>
+                        </li>
+                        <li class="next">
+                            <a href="javascript:;">
+                                <span th:text="#{button.nextPage}"></span>
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="timeline-empty alert alert-info hidden" 
+                    th:text="#{console.user.timeline.empty}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+<script type="text/javascript" src="http://static.tongrenlu.info/JavaScript-Templates-2.5.3/js/tmpl.min.js"></script>
+<script type="text/javascript" src="http://static.tongrenlu.info/jquery-ui-1.10.4/js/jquery.ui.effect.min.js"></script>
+<div th:replace="x-tmpl/library::template-item"></div>
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+    //new timeline({});
+
+    
+});
+</script>
+</th:block>
+</body>
+</html>

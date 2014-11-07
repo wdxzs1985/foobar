@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.AlbumMapper">
+
+    <insert id="insert" >
+        INSERT INTO r_album(
+        <trim suffixOverrides=",">
+            id,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{id},
+        </trim>
+        )
+    </insert>
+    
+    <update id="delete">
+        UPDATE r_album
+        <set>
+            del_flg = '1',
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    
+    <select id="count" resultType="int">
+        select
+            count(id)
+        from
+            v_album
+        <where>
+            <if test="userBean != null">
+            AND v_album.`userBean.id` = #{userBean.id}
+            </if>
+            <if test="publishFlg != null">
+            AND v_album.`publishFlg` = #{publishFlg}
+            </if>
+            <if test="query != null">
+            <bind name="pattern" value="'%' + query + '%'" />
+            AND (v_album.title LIKE #{pattern}
+            OR  v_album.description LIKE #{pattern})
+            </if>
+        </where>
+    </select>
+    
+    <select id="search" resultType="AlbumBean">
+        select
+        <trim suffixOverrides=",">
+            v_album.id                      as id,
+            v_album.title                   as title,
+            v_album.description             as description,
+            v_album.`userBean.id`           as `userBean.id`,
+            v_album.`userBean.nickname`     as `userBean.nickname`,
+        </trim>
+        from
+            v_album 
+        <where>
+            <if test="userBean != null">
+            AND v_album.`userBean.id` = #{userBean.id}
+            </if>
+            <if test="publishFlg != null">
+            AND v_album.publishFlg = #{publishFlg}
+            </if>
+            <if test="query != null">
+            <bind name="pattern" value="'%' + query + '%'" />
+            AND (v_album.title LIKE #{pattern}
+            OR  v_album.description LIKE #{pattern})
+            </if>
+        </where>
+        order by v_album.id desc
+        limit #{start}, #{pageSize}
+    </select>
+    
+    
+    <select id="fetchOne" resultType="AlbumBean">
+        select
+        <trim suffixOverrides=",">
+            v_album.id                      as id,
+            v_album.title                   as title,
+            v_album.description             as description,
+            v_album.`userBean.id`           as `userBean.id`,
+            v_album.`userBean.nickname`     as `userBean.nickname`,
+        </trim>
+        from
+            v_album 
+        <where>
+            id = #{id}
+        </where>
+    </select>
+</mapper>

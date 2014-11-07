@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<body>
+
+<script id="template-item" type="text/x-tmpl" th:inline="text" th:fragment="template-item">
+{% for (var i=0, photo; photo=o.content[i]; i++) { %}
+<div class="col-sm-3 ">
+<div class="card">
+    <a href="/picture/{%= photo.id %}" class="pull-left">
+        <img src="/files/{%= photo.id %}/thumbnail_120.jpg" class="media-object img-60 visible-xs"/>
+        <img src="/files/{%= photo.id %}/thumbnail_120.jpg" class="media-object img-120 hidden-xs"/>
+    </a>
+    <div class="media-body">
+        <h5 class="media-heading">
+            <strong>{%=photo.title%}</strong>
+        </h5>
+        <p>{%=photo.camera%}</p>
+    </div>
+</div>
+</div>
+{% } %}
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.FileMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO m_file(
+        <trim suffixOverrides=",">
+            NAME,
+            EXTENSION,
+            user_id,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{name},
+            #{extension},
+            #{userBean.id},
+        </trim>
+        )
+    </insert>
+    
+    <select id="fetchList" resultType="FileBean">
+        SELECT
+        <trim suffixOverrides=",">
+            A.ID                as id,
+            A.NAME              as name,
+            A.EXTENSION         as extension,
+            v_user.id           as "userBean.id",
+            v_user.nickname     as "userBean.nickname"
+        </trim>
+        FROM
+            m_file A
+        left join v_user on A.user_id = v_user.id
+        <where>
+            A.ARTICLE_ID = #{articleId}
+        AND A.DEL_FLG = '0'
+        </where>
+        ORDER BY A.ID DESC
+    </select>
+    
+    <select id="fetchBean" resultType="FileBean">
+        SELECT
+        <trim suffixOverrides=",">
+            A.ID                as id,
+            A.NAME              as name,
+            A.EXTENSION         as extension,
+            v_user.id           as "userBean.id",
+            v_user.nickname     as "userBean.nickname"
+        </trim>
+        FROM
+            m_file A
+        left join v_user on A.user_id = v_user.id
+        <where>
+            A.ID = #{id}
+        AND A.DEL_FLG = '0'
+        </where>
+    </select>
+    
+    <update id="delete" flushCache="true">
+        UPDATE m_file A
+        <set>
+            DEL_FLG = '1'
+        </set>
+        <where>
+            A.ID = #{id}
+        AND A.DEL_FLG = '0'
+        </where>
+    </update>
+    
+    <update id="update" flushCache="true">
+        UPDATE m_file A
+        <set>
+            NAME = #{name}
+        </set>
+        <where>
+            A.ID = #{id}
+        AND A.DEL_FLG = '0'
+        </where>
+    </update>
+</mapper>

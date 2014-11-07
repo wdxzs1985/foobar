@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+.template-upload,
+.template-download {
+	position: relative;
+	width: 180px;
+	height: 180px;
+	margin-left: 15px;
+    margin-top: 15px;
+	float: left;
+}
+
+.template-upload .preview,
+.template-download .preview  {
+    position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+.template-upload .overlay,
+.template-download .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0);
+}
+
+.template-upload .overlay:hover,
+.template-download .overlay:hover {
+    background: rgba(0,0,0,.3);
+}
+
+.template-upload .progress {
+    position: absolute;
+    border-radius: 0;
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    margin:0;
+    background: rgba(255,255,255,.3);
+}
+
+
+.template-upload .btn,
+.template-download .btn {
+    color: #ffffff;
+}

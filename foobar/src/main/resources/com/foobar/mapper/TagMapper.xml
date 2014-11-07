@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.TagMapper">
+    
+    <cache flushInterval="3600000" size="512" readOnly="true"/>
+    
+    <select id="count" resultType="int">
+        <bind name="pattern" value="'%' + _parameter.tag + '%'" />
+        SELECT
+            count(A.id)
+        FROM
+            m_tag A
+        <where>
+            A.TAG LIKE #{pattern}
+        </where>
+    </select>
+    
+    <select id="search" resultType="TagBean">
+        <bind name="pattern" value="'%' + _parameter.tag + '%'" />
+        SELECT
+        <trim suffixOverrides=",">
+            A.id        as id,
+            A.TAG       as tag,
+        </trim>
+        FROM
+            m_tag A
+        <where>
+            A.TAG LIKE #{pattern}
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+    
+    <select id="fetchBean" resultType="TagBean">
+        SELECT
+        <trim suffixOverrides=",">
+            A.id        as id,
+            A.TAG       as tag,
+        </trim>
+        FROM
+            m_tag A
+        <where>
+        <if test="id != null">
+            A.id = #{id}
+        </if>
+        <if test="tag != null">
+        AND A.TAG = #{tag}
+        </if>
+        </where>
+    </select>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO m_tag(
+        <trim suffixOverrides=",">
+            TAG,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{tag},
+        </trim>
+        )
+    </insert>
+    
+</mapper>

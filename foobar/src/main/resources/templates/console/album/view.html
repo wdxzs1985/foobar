@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+  layout:decorator="console/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-wrap">
+        <div class="container">
+            <div class="page-header">
+                <h1 th:text="${articleBean.title}"></h1>
+                <div class="btn-group">
+                    <a th:href="@{/console/album/__${articleBean.id}__/upload}" class="btn btn-default" >upload</a>
+                    <button class="btn btn-danger" >delete</button>
+                </div>
+            </div>
+            <th:block th:unless="${#lists.isEmpty(photoBeanList)}">
+                <div class="row">
+                     <div class="col-sm-6 col-md-4 col-lg-3" th:each="photoBean : ${photoBeanList}">
+                         <div class="thumbnail media card">
+                             <a class="visible-sm visible-xs pull-left" target="_blank" 
+                                th:alt-title="${articleBean.title}">
+                                 <img th:src="@{/files/p__${photoBean.id}__/thumbnail_180.jpg}" 
+                                      th:alt-title="${photoBean.name}"
+                                      class="media-object img-60 "/>
+                             </a>
+                             <a class="hidden-sm hidden-xs" target="_blank" 
+                                th:alt-title="${photoBean.name}">
+                                 <img th:src="@{/files/p__${photoBean.id}__/thumbnail_400.jpg}" 
+                                      th:alt-title="${photoBean.name}"
+                                      class=" "/>
+                             </a>
+                             <div class="caption">
+                                 <h5 class="media-heading text-single-line">
+                                     <a target="_blank" 
+                                        th:alt-title="${photoBean.name}"
+                                        th:text="${photoBean.name}" >
+                                     </a>
+                                 </h5>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+<script type="text/javascript" src="http://static.tongrenlu.info/JavaScript-Templates-2.5.3/js/tmpl.min.js"></script>
+<script type="text/javascript" src="http://static.tongrenlu.info/jquery-ui-1.10.4/js/jquery.ui.effect.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+    //new timeline({});
+
+    
+});
+</script>
+</th:block>
+</body>
+</html>

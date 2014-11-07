@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.ArticleMapper">
+
+    <cache flushInterval="3600000" size="512" readOnly="true"/>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO m_article(
+        <trim suffixOverrides=",">
+            user_id,
+            title,
+            description,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{userBean.id},
+            #{title},
+            #{description},
+        </trim>
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE m_article
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="publishFlg eq 1">
+                publish_flg = #{publishFlg},
+                publish_date = CURRENT_TIMESTAMP,
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    
+    <update id="delete">
+        UPDATE m_article
+        <set>
+            del_flg = '1',
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+</mapper>

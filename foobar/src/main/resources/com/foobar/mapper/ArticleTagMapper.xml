@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.ArticleTagMapper">
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO r_article_tag(
+        <trim suffixOverrides=",">
+            TAG_ID,
+            ARTICLE_ID,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{tagBean.id},
+            #{articleBean.id},
+        </trim>
+        )
+    </insert>
+    
+    <select id="fetchList" resultType="TagBean">
+        SELECT 
+        <trim suffixOverrides=",">
+            v_tag.id           as id,
+            v_tag.tag           as tag,
+            v_tag.cnt           as articleCount,
+        </trim>
+        FROM 
+            r_article_tag
+        LEFT JOIN 
+            v_tag 
+        ON r_article_tag.tag_id = v_tag.id
+        <where>
+            r_article_tag.article_id = #{articleBean.id}
+        AND r_article_tag.del_flg = '0'
+        </where>
+    </select>
+    
+    <update id="delete">
+        UPDATE r_article_tag
+        <set>
+            DEL_FLG = '1'
+        </set>
+        <where>
+        <if test="articleBean!=null">
+            ARTICLE_ID = #{articleBean.id}
+        </if>
+        </where>
+    </update>
+    
+</mapper>

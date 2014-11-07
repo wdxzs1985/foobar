@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.UserMapper">
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO m_user(
+        <trim suffixOverrides=",">
+           EMAIL,
+           PASSWORD,
+           NICKNAME,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{email},
+            #{password},
+            #{nickname},
+        </trim>
+        )
+    </insert>
+    
+    <select id="fetchBean" resultType="UserBean">
+        SELECT
+        <trim suffixOverrides=",">
+            U.id                    as id,
+            U.EMAIL                 as email,
+            U.PASSWORD              as password,
+            U.NICKNAME              as nickname,
+            U.signature             as signature,
+            U.role                  as role,
+            U.include_red_flg       as includeRedFlg,
+        </trim>
+        FROM
+            m_user U
+        <where>
+            U.DEL_FLG = '0'
+        <if test="fingerprint != null">
+        AND U.fingerprint = #{fingerprint}
+        </if>
+        <if test="email != null">
+        AND U.email = #{email}
+        </if>
+        <if test="id != null">
+        AND U.id = #{id}
+        </if>
+        </where>
+    </select>
+    
+    <select id="fetchProfile" resultType="UserProfileBean">
+        SELECT
+        <trim suffixOverrides=",">
+            U.id                    as id,
+            U.NICKNAME              as nickname,
+            U.signature             as signature,
+            U.musicCount            as musicCount,
+            U.comicCount            as comicCount,
+            U.followCount           as followCount,
+            U.followerCount         as followerCount,
+        </trim>
+        FROM
+            v_user U
+        <where>
+            U.id = #{id}
+        </where>
+    </select>
+    
+    <update id="update">
+        UPDATE
+            m_user
+        <set>
+            <if test="password != null">
+                PASSWORD = #{password},
+            </if>
+            <if test="fingerprint != null">
+                fingerprint = #{fingerprint},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="signature != null">
+                signature = #{signature},
+            </if>
+            <if test="includeRedFlg != null">
+                include_red_flg = #{includeRedFlg},
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+</mapper>

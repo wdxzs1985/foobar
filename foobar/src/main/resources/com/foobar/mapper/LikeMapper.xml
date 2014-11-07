@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foobar.mapper.LikeMapper">
+    
+    <cache flushInterval="3600000" size="512" readOnly="true"/>
+    
+    <insert id="insert">
+        INSERT INTO r_like(
+        <trim suffixOverrides=",">
+            USER_ID,
+            LIKE_ID,
+            CATEGORY,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{userBean.id},
+            #{likeId},
+            #{category},
+        </trim>
+        )
+    </insert>
+    
+    <select id="count" resultType="int">
+        SELECT
+            COUNT(L.ID)
+        FROM
+            r_like L
+        <where>
+            L.DEL_FLG = '0'
+        AND L.USER_ID = #{userBean.id}
+        AND L.LIKE_ID = #{likeId}
+        AND L.CATEGORY = #{category}
+        </where>
+    </select>
+    
+    <update id="delete" >
+        UPDATE
+            r_like L
+        SET
+            L.DEL_FLG = '1'
+        <where>
+        AND L.USER_ID = #{userBean.id}
+        AND L.LIKE_ID = #{likeId}
+        AND L.CATEGORY = #{category}
+        </where>
+    </update>
+    
+    <select id="countFollow" resultType="int">
+        SELECT
+            COUNT(L.ID)
+        FROM
+            r_like L
+        left join v_user on v_user.id = L.like_id
+        <where>
+            L.DEL_FLG = '0'
+        AND L.USER_ID = #{userBean.id}
+        AND L.CATEGORY = 'u'
+        </where>
+    </select>
+    
+    <select id="searchFollow" resultType="UserBean">
+        SELECT
+        <trim suffixOverrides=",">
+            m_user.id               as id,
+            m_user.nickname         as nickname,
+        </trim>
+        FROM
+            r_like L
+        left join m_user on m_user.id = L.like_id
+        <where>
+            L.DEL_FLG = '0'
+        AND L.USER_ID = #{userBean.id}
+        AND L.CATEGORY = 'u'
+        </where>
+        order by L.id desc
+        limit #{start}, #{pageSize}
+    </select>
+    
+    <select id="countFollower" resultType="int">
+        SELECT
+            COUNT(L.ID)
+        FROM
+            r_like L
+        left join m_user on m_user.id = L.user_id
+        <where>
+            L.DEL_FLG = '0'
+        AND L.LIKE_ID = #{userBean.id}
+        AND L.CATEGORY = 'u'
+        </where>
+    </select>
+    
+    <select id="searchFollower" resultType="UserBean">
+        SELECT
+        <trim suffixOverrides=",">
+            m_user.id               as id,
+            m_user.nickname         as nickname,
+        </trim>
+        FROM
+            r_like L
+        left join m_user on m_user.id = L.user_id
+        <where>
+            L.DEL_FLG = '0'
+        AND L.LIKE_ID = #{userBean.id}
+        AND L.CATEGORY = 'u'
+        </where>
+        order by L.id desc
+        limit #{start}, #{pageSize}
+    </select>
+    
+</mapper>

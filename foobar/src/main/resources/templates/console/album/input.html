@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+  layout:decorator="console/layout">
+<body>
+<div layout:fragment="content">
+    <div class="container-wrap" >
+        <div class="container">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="active"><a href="#single" role="tab" data-toggle="tab">Single</a></li>
+              <li><a href="#multi" role="tab" data-toggle="tab">Multi</a></li>
+            </ul>
+            
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="single">
+                    <form class="" th:action="@{/console/album/input/single}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div th:class="${#strings.isEmpty(titleError)} ? 'form-group has-feedback' : 'form-group has-error has-feedback'">
+                                    <label for="inputTitle" class=" control-label" 
+                                        th:text="#{ArticleBean.title}">Title</label>
+                                    <div class="">
+                                        <input type="text" class="form-control" 
+                                            id="inputTitle" name="title"
+                                            th:value="${articleBean.title}"
+                                            th:placeholder="#{ArticleBean.title}"/>
+                                        <span class="glyphicon glyphicon-remove form-control-feedback"
+                                            th:unless="${#strings.isEmpty(titleError)}"></span>
+                                        <p class="help-block" 
+                                            th:unless="${#strings.isEmpty(titleError)}"
+                                            th:text="${titleError}"></p>
+                                    </div>
+                                </div>
+                                <div th:class="${#strings.isEmpty(error)} ? 'form-group has-feedback' : 'form-group has-error has-feedback'">
+                                    <label for="inputFile" class=" control-label" 
+                                        th:text="#{ArticleBean.title}">File</label>
+                                    <div class="">
+                                        <input type="file" class="form-control" 
+                                            id="inputFile" name="file"/>
+                                        <span class="glyphicon glyphicon-remove form-control-feedback"
+                                            th:unless="${#strings.isEmpty(error)}"></span>
+                                        <p class="help-block" 
+                                            th:unless="${#strings.isEmpty(error)}"
+                                            th:text="${error}"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" th:text="#{button.save}"></button>
+                                    <a th:href="@{/console/album}" class="btn btn-default" th:text="#{button.cancel}"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane" id="multi">
+                    <form class="" th:action="@{/console/album/input/multiple}" method="post">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div th:class="${#strings.isEmpty(titleError)} ? 'form-group has-feedback' : 'form-group has-error has-feedback'">
+                                    <label for="inputTitle" class=" control-label" 
+                                        th:text="#{ArticleBean.title}">Title</label>
+                                    <div class="">
+                                        <input type="text" class="form-control" 
+                                            id="inputTitle" name="title"
+                                            th:value="${articleBean.title}"
+                                            th:placeholder="#{ArticleBean.title}"/>
+                                        <span class="glyphicon glyphicon-remove form-control-feedback"
+                                            th:unless="${#strings.isEmpty(titleError)}"></span>
+                                        <p class="help-block" 
+                                            th:unless="${#strings.isEmpty(titleError)}"
+                                            th:text="${titleError}"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" th:text="#{button.saveAndUpload}"></button>
+                                    <a th:href="@{/console/album}" class="btn btn-default" th:text="#{button.cancel}"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts-libs">
+</th:block>
+<th:block layout:fragment="scripts">
+<script type="text/javascript" th:inline="javascript">
+</script>
+</th:block>
+</body>
+</html>
