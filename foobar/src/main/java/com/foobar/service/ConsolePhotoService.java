@@ -257,4 +257,12 @@ public class ConsolePhotoService {
         return groups;
     }
 
+    public PhotoDocument findUserPhoto(final UserBean loginUser, final Integer fileId) {
+        final PhotoDocument document = this.photoRepository.findOne(fileId);
+        if (document.getUserId().equals(loginUser.getId())) {
+            return document;
+        }
+        return null;
+    }
+
 }

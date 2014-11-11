@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+  layout:decorator="console/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-wrap container-header">
+        <img th:src="@{/files/p__${document.id}__/thumbnail_1080.jpg}" 
+            th:alt-title="${document.title}"
+            class="img-responsive" style="max-height: 650px; margin: 0 auto;"/>
+    </div>
+    <div class="container-wrap container-wrap-darker">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 th:text="${document.title}"></h3>
+                    <p th:text="${document.description}"></p>
+                </div>
+                <div class="col-md-3">
+                    <ul>
+                        <li>
+                            <span th:text="${document.make}"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <ul>
+                        <li th:each="exif : ${document.exif}">
+                        
+                            <span th:text="${exif}"></span>
+                        
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+</th:block>
+</body>
+</html>

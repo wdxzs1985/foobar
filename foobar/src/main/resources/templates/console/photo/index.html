@@ -26,24 +26,6 @@
             </div>
         </div>
     </div>
-    <div class="container-wrap container-tab">
-        <div class="container">
-            <ul class="nav">
-                <li class="">
-                    <a th:href="@{/console}">
-                        <span class="glyphicon glyphicon-home"></span>
-                        <span class="hidden-xs" th:text="#{console.user.timeline}"></span>
-                    </a>
-                </li>
-                <li class="active">
-                    <a th:href="@{/console/album}">
-                        <span class="glyphicon glyphicon-folder-open"></span>
-                        <span class="hidden-xs" th:text="#{console.article}"></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
     <div class="container-wrap container-wrap-darker">
         <div class="container">
             <th:block th:unless="${#lists.isEmpty(page.content)}">
