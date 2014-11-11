@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+  layout:decorator="console/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-wrap container-tab">
+        <div class="container">
+            <ul class="nav">
+                <li class="">
+                    <a th:href="@{/console/timeline}">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a th:href="@{/console/timeline/__${year}__}">
+                        <span th:text="${year}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-wrap container-wrap-darker">
+        <div class="container" >
+            <div class="" th:each="groupMap : ${groups}">
+                <h1>
+                    <a th:href="@{/console/timeline/__${groupMap.year}__/__${groupMap.month}__}"
+                       th:text="${groupMap.year} + '/' + ${groupMap.month}">
+                    </a>
+                </h1>
+                <div class="row">
+                     <div class="col-sm-6 col-md-3 col-lg-2" th:each="photoBean : ${groupMap.content}">
+                         <div class="thumbnail media card">
+                             <a class="visible-sm visible-xs pull-left" 
+                                th:href="@{/console/photo/__${photoBean.id}__}"
+                                th:alt-title="${photoBean.name}">
+                                 <img th:src="@{/files/p__${photoBean.id}__/thumbnail_180.jpg}" 
+                                      th:alt-title="${photoBean.name}"
+                                      class="media-object img-60 "/>
+                             </a>
+                             <a class="hidden-sm hidden-xs" 
+                                th:href="@{/console/photo/__${photoBean.id}__}" 
+                                th:alt-title="${photoBean.name}">
+                                 <img th:src="@{/files/p__${photoBean.id}__/thumbnail_180.jpg}" 
+                                      th:alt-title="${photoBean.name}"
+                                      class="img-180 "/>
+                             </a>
+                             <div class="caption">
+                                 <h5 class="media-heading text-single-line">
+                                     <a th:href="@{/console/photo/__${photoBean.id}__}"
+                                        th:alt-title="${photoBean.name}"
+                                        th:text="${photoBean.name}" >
+                                     </a>
+                                 </h5>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+<script type="text/javascript" src="http://static.tongrenlu.info/JavaScript-Templates-2.5.3/js/tmpl.min.js"></script>
+<script type="text/javascript" src="http://static.tongrenlu.info/jquery-ui-1.10.4/js/jquery.ui.effect.min.js"></script>
+</th:block>
+</body>
+</html>

@@ -21,8 +21,8 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul id="nav-member" class="nav navbar-nav navbar-left" th:if="${session.LOGIN_USER.member}">
-        <li class="cl-effect-1"><a th:href="@{/console/album/input}" th:text="#{console.upload}"></a></li>
-        <li class="cl-effect-1"><a th:href="@{/console/manage}" th:text="#{console.manage}"></a></li>
+        <li class="cl-effect-1"><a th:href="@{/console/upload}" th:text="#{console.upload}"></a></li>
+        <li class="cl-effect-1"><a th:href="@{/console/photo}" th:text="#{console.manage}"></a></li>
       </ul>
       <ul id="nav-editor" class="nav navbar-nav navbar-left" th:if="${session.LOGIN_USER.editor or session.LOGIN_USER.admin}">
       </ul>

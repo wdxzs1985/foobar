@@ -8,51 +8,103 @@
         insert into r_photo (
         <trim suffixOverrides=",">
             id,
-            name,
-            make,
-            model,
-            lens_model,
-            focal_length,
-            shutter_speed,
-            aperture,
-            iso_equivalent,
-            taken
+            year,
+            month,
+            day,
         </trim>
         ) values (
         <trim suffixOverrides=",">
             #{id},
-            #{name},
-            #{make},
-            #{model},
-            #{lensModel},
-            #{focalLength},
-            #{shutterSpeed},
-            #{aperture},
-            #{isoEquivalent},
-            #{taken},
+            #{year},
+            #{month},
+            #{day},
         </trim>
         )
     </insert>
     
-    <select id="fetchList" resultType="PhotoBean">
-        select
+    <select id="fetchPhotoGroup" resultType="map">
+        SELECT 
         <trim suffixOverrides=",">
-            `v_album_photo`.`photoBean.id`              as id,
-            `v_album_photo`.`photoBean.name`            as name,
-            `v_album_photo`.`photoBean.make`            as make,
-            `v_album_photo`.`photoBean.model`           as model,
-            `v_album_photo`.`photoBean.lensModel`       as lensModel,
-            `v_album_photo`.`photoBean.focalLength`     as focalLength,
-            `v_album_photo`.`photoBean.shutterSpeed`    as shutterSpeed,
-            `v_album_photo`.`photoBean.aperture`        as aperture,
-            `v_album_photo`.`photoBean.isoEquivalent`   as isoEquivalent,
-            `v_album_photo`.`photoBean.taken`           as taken,
+            year,
+            <if test="year != null">
+                month,
+            </if>
+            <if test="month != null">
+                day,
+            </if>
+            count(r_photo.id) as cnt,
+            m_user.id as "userBean.id",
+            m_user.nickname as "userBean.nickname",
         </trim>
-        from
-            v_album_photo 
+        FROM
+            r_photo
+                inner join
+            m_file ON m_file.id = r_photo.id
+                inner join
+            m_user ON m_file.user_id = m_user.id
         <where>
-            `albumBean.id` = #{articleBean.id}
+            m_user.id = #{userBean.id}
+            <if test="year != null">
+                and r_photo.year = #{year}
+            </if>
+            <if test="month != null">
+                and r_photo.month = #{month}
+            </if>
+            <if test="day != null">
+                and r_photo.day = #{day}
+            </if>
+            and m_file.del_flg = 0
         </where>
-        order by orderNo 
+        group by 
+        <trim suffixOverrides=",">
+            year,
+            <if test="year != null">
+                month,
+            </if>
+            <if test="month != null">
+                day,
+            </if>
+        </trim>
+        order by 
+        <trim suffixOverrides=",">
+            year desc,
+            <if test="year != null">
+                month desc,
+            </if>
+            <if test="month != null">
+                day desc,
+            </if>
+        </trim>
+    </select>
+    
+    
+    <select id="fetchPhotoByGroup" resultType="PhotoBean">
+        SELECT 
+        <trim suffixOverrides=",">
+            m_file.id,
+            m_file.name,
+            m_user.id as "userBean.id",
+            m_user.nickname as "userBean.nickname",
+        </trim>
+        FROM
+            r_photo
+                inner join
+            m_file ON m_file.id = r_photo.id
+                inner join
+            m_user ON m_file.user_id = m_user.id
+        <where>
+            m_user.id = #{userBean.id}
+            <if test="year != null">
+                and r_photo.year = #{year}
+            </if>
+            <if test="month != null">
+                and r_photo.month = #{month}
+            </if>
+            <if test="day != null">
+                and r_photo.day = #{day}
+            </if>
+            and m_file.del_flg = 0
+        </where>
+        order by id desc
     </select>
 </mapper>

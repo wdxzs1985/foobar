@@ -1,5 +1,8 @@
 package com.foobar.manager;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,4 +23,11 @@ public class PhotoManager {
         this.photoMapper.insert(photoBean);
     }
 
+    public List<Map<String, Object>> findUserPhotoGroup(final Map<String, Object> param) {
+        return this.photoMapper.fetchPhotoGroup(param);
+    }
+
+    public List<PhotoBean> findUserPhotoByGroup(final Map<String, Object> param) {
+        return this.photoMapper.fetchPhotoByGroup(param);
+    }
 }

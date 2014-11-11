@@ -9,5 +9,7 @@ public interface PhotoMapper {
 
     void insert(PhotoBean photoBean);
 
-    List<PhotoBean> fetchList(Map<String, Object> params);
+    List<Map<String, Object>> fetchPhotoGroup(Map<String, Object> param);
+
+    List<PhotoBean> fetchPhotoByGroup(Map<String, Object> param);
 }

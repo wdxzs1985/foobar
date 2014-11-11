@@ -1,19 +1,15 @@
 package com.foobar.manager;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.im4java.core.ConvertCmd;
@@ -25,14 +21,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifIFD0Directory;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.foobar.domain.AlbumBean;
 import com.foobar.domain.FileBean;
-import com.foobar.domain.PhotoBean;
 import com.foobar.domain.UserBean;
 
 @Component
@@ -106,19 +95,6 @@ public class FileManager {
                 for (final int size : FileManager.COVER_SIZE_ARRAY) {
                     this.copyDefaultCover(dirId, size);
                 }
-            }
-        }
-    }
-
-    public void saveAlbumCover(final AlbumBean dtoBean, final FileBean fileBean) {
-        final String dirId = FileManager.ALBUM + dtoBean.getId();
-        if (fileBean != null) {
-            final String name = String.format("original.%s", fileBean.getExtension());
-            final File inputFile = this.getPhotoFile(fileBean, name);
-            this.convertCover(inputFile, dirId);
-        } else {
-            for (final int size : FileManager.COVER_SIZE_ARRAY) {
-                this.copyDefaultCover(dirId, size);
             }
         }
     }
@@ -268,69 +244,4 @@ public class FileManager {
         return isValid;
     }
 
-    public void readPhotoInfo(final PhotoBean photoBean, final MultipartFile upload) {
-        final String filename = upload.getOriginalFilename();
-        final String name = FilenameUtils.getBaseName(filename);
-        final String extension = FilenameUtils.getExtension(filename);
-        photoBean.setName(name);
-        photoBean.setExtension(StringUtils.lowerCase(extension));
-
-        BufferedInputStream input = null;
-        try {
-            input = new BufferedInputStream(upload.getInputStream());
-            final Metadata metadata = ImageMetadataReader.readMetadata(input, true);
-            if (metadata.containsDirectory(ExifIFD0Directory.class)) {
-                final ExifIFD0Directory exifIFD0 = metadata.getDirectory(ExifIFD0Directory.class);
-                if (exifIFD0.containsTag(ExifIFD0Directory.TAG_MAKE)) {
-                    final String make = exifIFD0.getDescription(ExifIFD0Directory.TAG_MAKE);
-                    photoBean.setMake(make);
-                }
-                if (exifIFD0.containsTag(ExifIFD0Directory.TAG_MODEL)) {
-                    final String model = exifIFD0.getDescription(ExifIFD0Directory.TAG_MODEL);
-                    photoBean.setModel(model);
-                }
-            }
-
-            if (metadata.containsDirectory(ExifSubIFDDirectory.class)) {
-                final ExifSubIFDDirectory exifSubIFD = metadata.getDirectory(ExifSubIFDDirectory.class);
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_LENS_MODEL)) {
-                    final String lensModel = exifSubIFD.getDescription(ExifSubIFDDirectory.TAG_LENS_MODEL);
-                    photoBean.setLensModel(lensModel);
-                }
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_FOCAL_LENGTH)) {
-                    final String focalLength = exifSubIFD.getDescription(ExifSubIFDDirectory.TAG_FOCAL_LENGTH);
-                    photoBean.setFocalLength(focalLength);
-                }
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_SHUTTER_SPEED)) {
-                    final String shutterSpeed = exifSubIFD.getDescription(ExifSubIFDDirectory.TAG_SHUTTER_SPEED);
-                    photoBean.setShutterSpeed(shutterSpeed);
-                }
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_APERTURE)) {
-                    final String aperture = exifSubIFD.getDescription(ExifSubIFDDirectory.TAG_APERTURE);
-                    photoBean.setAperture(aperture);
-                }
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT)) {
-                    final Integer isoEquivalent = exifSubIFD.getInteger(ExifSubIFDDirectory.TAG_ISO_EQUIVALENT);
-                    photoBean.setIsoEquivalent(isoEquivalent);
-                }
-
-                if (exifSubIFD.containsTag(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)) {
-                    final Date taken = exifSubIFD.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-                    photoBean.setTaken(taken);
-                }
-            }
-        } catch (final IOException e) {
-            this.log.error(e.getMessage(), e);
-        } catch (final ImageProcessingException e) {
-            this.log.error(e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(input);
-        }
-
-    }
 }

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.foobar.domain.TimelineBean;
 import com.foobar.domain.UserBean;
 import com.foobar.domain.UserProfileBean;
-import com.foobar.manager.AlbumManager;
 import com.foobar.manager.LikeManager;
 import com.foobar.manager.UserManager;
 import com.foobar.support.PaginateSupport;
@@ -22,8 +21,6 @@ public class HomeUserSerivce {
 
     @Autowired
     private UserManager userManager = null;
-    @Autowired
-    private AlbumManager articleManager = null;
     @Autowired
     private LikeManager likeManager = null;
 
@@ -59,8 +56,7 @@ public class HomeUserSerivce {
         if (this.userManager.validateUserIsSignin(loginUser, model, locale)) {
             final UserBean userBean = this.userManager.getById(userId);
             if (this.likeManager.validateUserNotSame(loginUser, userBean)) {
-                final int count = this.likeManager.countLike(loginUser,
-                                                             userBean);
+                final int count = this.likeManager.countLike(loginUser, userBean);
                 if (count == 0) {
                     this.likeManager.addLike(loginUser, userBean);
                     result = LikeManager.RESULT_LIKE;
