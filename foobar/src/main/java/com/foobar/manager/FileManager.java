@@ -150,8 +150,10 @@ public class FileManager {
         op.extent(size, size);
         op.addImage(output.getAbsolutePath());
         // execute the operation
-        this.log.info(this.getConvertPath());
-        this.log.info(op.toString());
+        if (this.log.isDebugEnabled()) {
+            this.log.debug(this.getConvertPath());
+            this.log.debug(op.toString());
+        }
         try {
             cmd.run(op);
         } catch (final IOException e) {
@@ -191,11 +193,13 @@ public class FileManager {
         // create the operation, add images and operators/options
         final IMOperation op = this.getImOperation();
         op.addImage(input.getAbsolutePath());
-        op.resize(null, size, "^");
+        op.resize(null, size, ">");
         op.addImage(output.getAbsolutePath());
         // execute the operation
-        this.log.info(this.getConvertPath());
-        this.log.info(op.toString());
+        if (this.log.isDebugEnabled()) {
+            this.log.debug(this.getConvertPath());
+            this.log.debug(op.toString());
+        }
         try {
             cmd.run(op);
         } catch (final IOException e) {
