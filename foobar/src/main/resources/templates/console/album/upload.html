@@ -10,6 +10,29 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div class="container-wrap container-header">
+        <div class="container">
+            <h1 th:text="#{console.upload}"></h1>
+        </div>
+    </div>
+    <div class="container-wrap container-tab">
+        <div class="container">
+            <ul class="nav">
+                <li class="active">
+                    <a th:href="@{/console}">
+                        <span class="glyphicon glyphicon-home"></span>
+                        <span class="hidden-xs" th:text="#{console.user.timeline}"></span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/console/album}">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <span class="hidden-xs" th:text="#{console.article}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="container-wrap" >
         <div class="container">
             <div class="page-header" layout:fragment="page-header">
@@ -62,7 +85,7 @@
                 </div>
                 <!-- The table listing the files available for upload/download -->
                 <div role="presentation">
-                    <div class="files row"></div>
+                    <div class="files clearfix"></div>
                 </div>
             </form>
             <hr />

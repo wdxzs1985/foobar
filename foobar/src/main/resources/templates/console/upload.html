@@ -10,11 +10,37 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div class="container-wrap container-header">
+        <div class="container">
+            <h1 th:text="#{console.upload}"></h1>
+        </div>
+    </div>
+    <div class="container-wrap container-tab">
+        <div class="container">
+            <ul class="nav">
+                <li>
+                    <a th:href="@{/console}">
+                        <span class="glyphicon glyphicon-home"></span>
+                        <span class="hidden-xs" th:text="#{console.user.timeline}"></span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/console/album}">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <span class="hidden-xs" th:text="#{console.article}"></span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a th:href="@{/console/upload}">
+                        <span class="glyphicon glyphicon-upload"></span>
+                        <span class="hidden-xs" th:text="#{console.upload}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="container-wrap" >
         <div class="container">
-            <div class="page-header" layout:fragment="page-header">
-                <h3 th:text="#{console.upload}"></h3>
-            </div>
             <div class="col-sm-6 col-sm-offset-3" th:unless="${#strings.isEmpty(error)}">
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

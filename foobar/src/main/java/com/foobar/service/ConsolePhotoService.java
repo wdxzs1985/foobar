@@ -17,17 +17,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.exif.GpsDirectory;
 import com.foobar.document.PhotoDocument;
 import com.foobar.domain.FileBean;
 import com.foobar.domain.PhotoBean;
@@ -35,7 +35,6 @@ import com.foobar.domain.UserBean;
 import com.foobar.manager.FileManager;
 import com.foobar.manager.PhotoManager;
 import com.foobar.manager.TagManager;
-import com.foobar.repository.PhotoRepository;
 
 @Service
 public class ConsolePhotoService {
@@ -45,19 +44,16 @@ public class ConsolePhotoService {
     @Autowired
     private PhotoManager photoManager = null;
     @Autowired
-    private PhotoRepository photoRepository = null;
-    @Autowired
     private TagManager tagManager = null;
     @Autowired
     private FileManager fileManager = null;
     @Autowired
     private MessageSource messageSource = null;
 
-    public boolean addPhoto(final UserBean loginUser,
-                            final MultipartFile upload,
-                            final Map<String, Object> fileModel,
-                            final Locale locale) {
-        boolean result = false;
+    public PhotoBean addPhoto(final UserBean loginUser,
+                              final MultipartFile upload,
+                              final Map<String, Object> fileModel,
+                              final Locale locale) {
         if (this.validatePhoto(upload, fileModel, locale)) {
 
             final PhotoBean photoBean = new PhotoBean();
@@ -82,7 +78,7 @@ public class ConsolePhotoService {
 
             photoDocument.setId(photoBean.getId());
 
-            this.photoRepository.save(photoDocument);
+            // this.photoRepository.save(photoDocument);
 
             this.fileManager.saveFile(photoBean, upload);
             this.fileManager.convertImage(photoBean);
@@ -90,9 +86,9 @@ public class ConsolePhotoService {
             fileModel.put("id", photoBean.getId());
             fileModel.put("name", photoBean.getName());
 
-            result = true;
+            return photoBean;
         }
-        return result;
+        return null;
     }
 
     private void readFileInfo(final FileBean fileBean, final MultipartFile upload) {
@@ -125,6 +121,10 @@ public class ConsolePhotoService {
 
                 for (final Tag tag : exifIFD0.getTags()) {
                     photoDocument.getExif().add(tag.getDescription());
+                    this.log.debug(String.format("[%s]%s: %s",
+                                                 tag.getDirectoryName(),
+                                                 tag.getTagName(),
+                                                 tag.getDescription()));
                 }
             }
 
@@ -175,9 +175,24 @@ public class ConsolePhotoService {
 
                 for (final Tag tag : exifSubIFD.getTags()) {
                     photoDocument.getExif().add(tag.getDescription());
+                    this.log.debug(String.format("[%s]%s: %s",
+                                                 tag.getDirectoryName(),
+                                                 tag.getTagName(),
+                                                 tag.getDescription()));
                 }
-
             }
+
+            if (metadata.containsDirectory(GpsDirectory.class)) {
+                final GpsDirectory gpsDir = metadata.getDirectory(GpsDirectory.class);
+                final GeoLocation geo = gpsDir.getGeoLocation();
+                this.log.debug(String.format("http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&sensor=false",
+                                             geo.getLatitude(),
+                                             geo.getLongitude()));
+                this.log.debug(String.format("http://nominatim.openstreetmap.org/reverse?format=json&lat=%f&lon=%f&zoom=18&addressdetails=1",
+                                             geo.getLatitude(),
+                                             geo.getLongitude()));
+            }
+
         } catch (final IOException e) {
             this.log.error(e.getMessage(), e);
         } catch (final ImageProcessingException e) {
@@ -199,10 +214,11 @@ public class ConsolePhotoService {
         return isValid;
     }
 
-    public Page<PhotoDocument> findUserPhotos(final UserBean loginUser, final Pageable pageable) {
-        final Integer userId = loginUser.getId();
-        return this.photoRepository.findByUserId(userId, pageable);
-    }
+    // public Page<PhotoDocument> findUserPhotos(final UserBean loginUser, final
+    // Pageable pageable) {
+    // final Integer userId = loginUser.getId();
+    // return this.photoRepository.findByUserId(userId, pageable);
+    // }
 
     public List<Map<String, Object>> findUserPhotoGroup(final UserBean loginUser) {
         final Map<String, Object> param = new HashMap<String, Object>();
@@ -257,12 +273,13 @@ public class ConsolePhotoService {
         return groups;
     }
 
-    public PhotoDocument findUserPhoto(final UserBean loginUser, final Integer fileId) {
-        final PhotoDocument document = this.photoRepository.findOne(fileId);
-        if (document.getUserId().equals(loginUser.getId())) {
-            return document;
-        }
-        return null;
-    }
+    // public PhotoDocument findUserPhoto(final UserBean loginUser, final
+    // Integer fileId) {
+    // final PhotoDocument document = this.photoRepository.findOne(fileId);
+    // if (document.getUserId().equals(loginUser.getId())) {
+    // return document;
+    // }
+    // return null;
+    // }
 
 }

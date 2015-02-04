@@ -14,11 +14,10 @@ var fileupload = function(option) {
 	}, option);
 	
 	if(settings.url) {
-		// Initialize the jQuery File Upload widget:
-	    $('#fileupload').fileupload(settings);
+	    var $fileupload = $('#fileupload');
+	    $fileupload.fileupload(settings);
 	    
-	    if(settings.preload) {
-			 // Load existing files:
+		 // Load existing files:
 		    $('#fileupload').addClass('fileupload-processing');
 		    $.ajax({
 		        // Uncomment the following to send cross-domain cookies:
@@ -32,6 +31,5 @@ var fileupload = function(option) {
 		        $(this).fileupload('option', 'done')
 		            .call(this, $.Event('done'), {result: result});
 		    });
-	    }
 	}
 };

@@ -7,7 +7,7 @@
     <title th:inline="text">[[#{console}]]</title>
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-static-top" layout:fragment="header">
+<div class="navbar navbar-default navbar-static-top" layout:fragment="header">
   <div class="container">
     <div class="navbar-header cl-effect-1">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -20,10 +20,6 @@
          th:href="@{/console}" th:text="#{console}"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse">
-      <ul id="nav-member" class="nav navbar-nav navbar-left" th:if="${session.LOGIN_USER.member}">
-        <li class="cl-effect-1"><a th:href="@{/console/upload}" th:text="#{console.upload}"></a></li>
-        <li class="cl-effect-1"><a th:href="@{/console/photo}" th:text="#{console.manage}"></a></li>
-      </ul>
       <ul id="nav-editor" class="nav navbar-nav navbar-left" th:if="${session.LOGIN_USER.editor or session.LOGIN_USER.admin}">
       </ul>
       <ul class="nav navbar-nav navbar-right">

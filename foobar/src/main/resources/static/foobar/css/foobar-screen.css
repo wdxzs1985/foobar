@@ -1,8 +1,12 @@
 @charset "UTF-8";
 
 body, html {
-    font-family: "Helvetica Neue", Helvetica, STHeiTi, "Microsoft YaHei", "微软雅黑", sans-serif;
+    font-family: "Helvetica Neue", Helvetica, STHeiTi, "Microsoft YaHei", sans-serif;
     font-size: 14px;
+}
+
+body {
+    background-color: #00bcd4;
 }
 
 .navbar-default {
@@ -34,32 +38,38 @@ body, html {
 	color: #fff;
 }
 
-.navbar-default .navbar-nav>.open>a, 
-.navbar-default .navbar-nav>.open>a:hover, 
-.navbar-default .navbar-nav>.open>a:focus{
-	background-color: transparent;
-    color: #fff;
+.navbar-default .navbar-nav .open .dropdown-menu>li {
+    height: 50px;
 }
 
-.navbar-default .navbar-nav .open .dropdown-menu>li>a,
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    background-color: #fff;
+    padding: 15px;
+}
+
 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, 
 .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus {
-    color: #555;
+    background-color: #eee;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu {
     background-color: #fff;
+    top: 0;
+    padding: 0;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
-    background-color: #fff;
+    background-color: #212121;
 }
 
 .navbar-default .navbar-toggle:hover, 
 .navbar-default .navbar-toggle:focus {
-    background-color: #fff;
+    background-color: #212121;
 }
 
 .navbar-default .navbar-toggle:hover .icon-bar,
 .navbar-default .navbar-toggle:focus .icon-bar {
-    background-color: #00bcd4;
+    background-color: #FFFFFF;
 }
 
 .navbar-static-bottom {
@@ -173,6 +183,7 @@ body, html {
     font-weight: bold;
     padding: 20px 22px;
     border-radius: 0;
+    border-bottom: transparent 4px solid;
 }
 
 .container-tab .nav>li>a:hover, 
@@ -181,7 +192,7 @@ body, html {
 .container-tab .nav>li.active>a:hover, 
 .container-tab .nav>li.active>a:focus {
     color: #fff;
-    border-bottom: #fff176 2px solid;
+    border-color: #fff176;
 }
 
 .container-tab .nav>li>a .badge {
@@ -324,7 +335,7 @@ h1.article-title {
     overflow: hidden;
 }
 
-.card .media-body{
-    padding: .5em;
+.card-footer .btn {
+    border-radius: 0;
 }
 
